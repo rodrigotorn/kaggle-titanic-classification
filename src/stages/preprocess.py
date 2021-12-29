@@ -1,7 +1,7 @@
-from src.stage import Stage
+from src.base_stage import BaseStage
 import pandas as pd
 
-class Preprocess(Stage):
+class Preprocess(BaseStage):
   def transform(df: pd.DataFrame) -> pd.DataFrame:
     df = df[1,:]
     return df
