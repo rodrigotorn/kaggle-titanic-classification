@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-from src._stage import BaseStage
 
 
 def _fill_nan(series: pd.Series) -> pd.Series:
@@ -10,7 +9,7 @@ def _fill_nan(series: pd.Series) -> pd.Series:
     return series.fillna(series.mean())
 
 
-class Preprocess(BaseStage):
+class Preprocess():
   def __init__(
     self,
     train_df: pd.DataFrame,
