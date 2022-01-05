@@ -19,21 +19,23 @@
 
 # %%
 import pandas as pd
-from src.stages.ingest import Ingest
+from sklearn.preprocessing import StandardScaler
 from src.stages.preprocess import Preprocess
-from src.stages.model import Model
+from src.stages.mlp_predict import MLPPredict
 
-# %%
-raw_train_df = Ingest().load('data/train.csv')
-raw_test_df = Ingest().load('data/test.csv')
-
-X_train, X_test = Preprocess().transform(raw_train_df, raw_test_df)
+# %% tags=[]
+raw_train_df = pd.read_csv('data/train.csv', index_col=0)
+raw_test_df = pd.read_csv('data/test.csv', index_col=0)
 y_train = raw_train_df['Survived']
 
-y_pred = Model().predict(X_train, y_train, X_test)
+preprocesser = Preprocess(raw_train_df, StandardScaler())
+X_train = preprocesser.transform(raw_train_df)
+X_test = preprocesser.transform(raw_test_df)
+
+y_pred = MLPPredict().predict(X_train, y_train, X_test)
 
 # %%
 predictions: pd.DataFrame = pd.DataFrame()
 predictions['PassengerId'] = raw_test_df.index
 predictions['Survived'] = y_pred
-predictions.to_csv('data/output.csv', index=False)
+predictions
