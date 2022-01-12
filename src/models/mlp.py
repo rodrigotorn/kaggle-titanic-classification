@@ -1,3 +1,5 @@
+"""Concrete Multi-layer Perceptron model"""
+
 import pandas as pd
 import numpy as np
 from sklearn.neural_network import MLPClassifier
@@ -6,6 +8,7 @@ from src._model import BaseModel
 
 
 class MLP(BaseModel):
+  """Concrete Multi-layer Perceptron model"""
   def __init__(
     self,
   ) -> None:
@@ -19,19 +22,19 @@ class MLP(BaseModel):
 
   def train(
     self,
-    X_train: pd.DataFrame,
+    x_train: pd.DataFrame,
     y_train: pd.DataFrame,
   ) -> np.ndarray:
-    self._mlp.fit(X_train, y_train)
+    self._mlp.fit(x_train, y_train)
     return cross_val_score(
       self._mlp,
-      X_train,
+      x_train,
       y_train,
       cv=5,
     )
 
   def predict(
     self,
-    X_test: pd.DataFrame,
+    x_test: pd.DataFrame,
   ) -> pd.Series:
-    return self._mlp.predict(X_test)
+    return self._mlp.predict(x_test)

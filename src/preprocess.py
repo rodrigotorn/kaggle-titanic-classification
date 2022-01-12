@@ -1,3 +1,5 @@
+"""Preprocess class specific for titanic dataset"""
+
 import pandas as pd
 import numpy as np
 
@@ -10,6 +12,7 @@ def _fill_nan(series: pd.Series) -> pd.Series:
 
 
 class Preprocess():
+  """Preprocess class. Scaler is defined when instantiated"""
   def __init__(
     self,
     train_df: pd.DataFrame,
@@ -26,7 +29,10 @@ class Preprocess():
     df = df.apply(_fill_nan, axis=0)
 
     pclass_dummy = pd.get_dummies(df['Pclass'])
-    pclass_dummy.rename(columns={1:'Pclass1', 2:'Pclass2', 3:'Pclass3'}, inplace=True)
+    pclass_dummy.rename(
+      columns={1:'Pclass1', 2:'Pclass2', 3:'Pclass3'},
+      inplace=True
+    )
     df = pd.concat([df, pclass_dummy], axis=1)
     df.drop('Pclass', axis = 1, inplace=True)
 
