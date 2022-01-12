@@ -29,8 +29,8 @@ raw_test_df = read_csv('data/test.csv', index_col=0)
 y_train = raw_train_df['Survived']
 
 preprocesser = Preprocess(raw_train_df, StandardScaler())
-X_train = preprocesser.transform(raw_train_df)
-X_test = preprocesser.transform(raw_test_df)
+x_train = preprocesser.transform(raw_train_df)
+x_test = preprocesser.transform(raw_test_df)
 
 mlp = MLP()
 scores = mlp.train(X_train, y_train)
