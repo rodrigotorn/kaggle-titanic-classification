@@ -1,5 +1,5 @@
-import pytest
-import numpy as np
+"""Preprocess basic test"""
+
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 
