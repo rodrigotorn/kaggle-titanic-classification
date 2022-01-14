@@ -18,28 +18,29 @@
 # %autoreload 1
 
 # %%
-from pandas import read_csv, DataFrame
+import pandas as pd
+import numpy as np
 from sklearn.preprocessing import StandardScaler
 from src.preprocess import Preprocess
 from src.models.mlp import MLP
 
 # %% tags=[]
-raw_train_df = read_csv('data/train.csv', index_col=0)
-raw_test_df = read_csv('data/test.csv', index_col=0)
-y_train = raw_train_df['Survived']
+raw_train_df: pd.DataFrame = pd.read_csv('data/train.csv', index_col=0)
+raw_test_df: pd.DataFrame = pd.read_csv('data/test.csv', index_col=0)
+y_train: pd.Series = raw_train_df['Survived']
 
 preprocesser = Preprocess(raw_train_df, StandardScaler())
-x_train = preprocesser.transform(raw_train_df)
-x_test = preprocesser.transform(raw_test_df)
+x_train: np.ndarray = preprocesser.transform(raw_train_df)
+x_test: np.ndarray = preprocesser.transform(raw_test_df)
 
 mlp = MLP()
-scores = mlp.train(X_train, y_train)
+scores: np.ndarray = mlp.train(x_train, y_train)
 scores
 
 # %%
-y_pred = mlp.predict(X_test)
+y_pred: np.ndarray = mlp.predict(x_test)
 
-predictions: DataFrame = DataFrame()
+predictions: pd.DataFrame = pd.DataFrame()
 predictions['PassengerId'] = raw_test_df.index
 predictions['Survived'] = y_pred
 predictions

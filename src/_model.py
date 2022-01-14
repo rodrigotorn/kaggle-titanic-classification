@@ -3,12 +3,11 @@
 from abc import ABC, abstractmethod
 
 class BaseModel(ABC):
-  pass
 
-@abstractmethod
-def train():
-  pass
+  @abstractmethod
+  def train(self):
+    pass
 
-@abstractmethod
-def predict():
-  pass
+  @abstractmethod
+  def predict(self):
+    pass
