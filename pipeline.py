@@ -23,8 +23,10 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 from src.preprocess import Preprocess
 from src.models.mlp import MLP
+from src.models.knn import KNN
+from src.models.rf import RF
 
-# %% tags=[]
+# %% tags=[] jupyter={"outputs_hidden": true}
 raw_train_df: pd.DataFrame = pd.read_csv('data/train.csv', index_col=0)
 raw_test_df: pd.DataFrame = pd.read_csv('data/test.csv', index_col=0)
 y_train: pd.Series = raw_train_df['Survived']
@@ -33,14 +35,24 @@ preprocesser = Preprocess(raw_train_df, StandardScaler())
 x_train: np.ndarray = preprocesser.transform(raw_train_df)
 x_test: np.ndarray = preprocesser.transform(raw_test_df)
 
-mlp = MLP()
-scores: np.ndarray = mlp.train(x_train, y_train)
-scores
+mlp = MLP(search_params=True)
+knn = KNN(search_params=True)
+rf = RF(search_params=True)
+
+mlp_score = mlp.train(x_train, y_train)
+knn_score = knn.train(x_train, y_train)
+rf_score = rf.train(x_train, y_train)
+
+print(mlp_score, knn_score, rf_score)
 
 # %%
-y_pred: np.ndarray = mlp.predict(x_test)
+predictions: pd.DataFrame = pd.DataFrame({
+    'mlp': mlp.predict(x_test),
+    'knn': knn.predict(x_test),
+    'rf': rf.predict(x_test),
+})
 
-predictions: pd.DataFrame = pd.DataFrame()
 predictions['PassengerId'] = raw_test_df.index
-predictions['Survived'] = y_pred
-predictions
+predictions['Survived'] = predictions.mode(axis=1)
+predictions.drop(['mlp', 'knn', 'rf'], axis=1, inplace=True)
+predictions.to_csv('data/output.csv', index=False)

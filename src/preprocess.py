@@ -34,11 +34,11 @@ class Preprocess():
       inplace=True
     )
     df = pd.concat([df, pclass_dummy], axis=1)
-    df.drop('Pclass', axis = 1, inplace=True)
+    df.drop('Pclass', axis=1, inplace=True)
 
     sex_dummy = pd.get_dummies(df['Sex'])
     df = pd.concat([df, sex_dummy], axis=1)
-    df.drop('Sex', axis = 1, inplace=True)
+    df.drop('Sex', axis=1, inplace=True)
     return df
 
   def transform(
