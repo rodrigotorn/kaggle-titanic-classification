@@ -2,18 +2,8 @@
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import cross_val_score, GridSearchCV
-from src._model import BaseModel
-
-def grid_search():
-  params = [{'n_estimators': [50, 100, 200, 500, 1000]}]
-  
-  return GridSearchCV(
-    RandomForestClassifier(),
-    param_grid=params,
-    scoring='accuracy',
-    cv=5
-  )
+from sklearn.model_selection import cross_val_score
+from src._model import BaseModel, grid_search
 
 
 class RF(BaseModel):
@@ -21,9 +11,10 @@ class RF(BaseModel):
   def __init__(
     self,
     search_params=False,
+    params=None,
   ) -> None:
     if search_params:
-      self._rf = grid_search()
+      self._rf = grid_search(RandomForestClassifier(), params)
     else:
       self._rf = RandomForestClassifier()
 

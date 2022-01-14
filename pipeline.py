@@ -26,7 +26,7 @@ from src.models.mlp import MLP
 from src.models.knn import KNN
 from src.models.rf import RF
 
-# %% tags=[] jupyter={"outputs_hidden": true}
+# %% tags=[]
 raw_train_df: pd.DataFrame = pd.read_csv('data/train.csv', index_col=0)
 raw_test_df: pd.DataFrame = pd.read_csv('data/test.csv', index_col=0)
 y_train: pd.Series = raw_train_df['Survived']
@@ -35,9 +35,15 @@ preprocesser = Preprocess(raw_train_df, StandardScaler())
 x_train: np.ndarray = preprocesser.transform(raw_train_df)
 x_test: np.ndarray = preprocesser.transform(raw_test_df)
 
-mlp = MLP(search_params=True)
-knn = KNN(search_params=True)
-rf = RF(search_params=True)
+mlp_params = [{'hidden_layer_sizes': [
+    (15,), (20,), (30,), (40,), (50,),
+  ]}]  
+knn_params = [{'n_neighbors': [5, 10, 15, 20, 25]}]
+rf_params = [{'n_estimators': [50, 100, 200, 500, 1000]}]
+    
+mlp = MLP(search_params=True, params=mlp_params)
+knn = KNN(search_params=True, params=knn_params)
+rf = RF(search_params=True, params=rf_params)
 
 mlp_score = mlp.train(x_train, y_train)
 knn_score = knn.train(x_train, y_train)
