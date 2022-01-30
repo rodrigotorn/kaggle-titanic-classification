@@ -2,3 +2,5 @@ jupyterlab
 jupytext
 pandas
 sklearn
+matplotlib
+seaborn
