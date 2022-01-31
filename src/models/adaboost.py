@@ -1,24 +1,24 @@
-"""Concrete Random Forest model"""
+"""Concrete Adaboost model"""
 import pandas as pd
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import AdaBoostClassifier
 from src._model import BaseModel
 
 
-class RF(BaseModel):
-  """Concrete Random Forest model"""
+class Adaboost(BaseModel):
+  """Concrete Adaboost model"""
   def __init__(self) -> None:
     pass
 
   def predict(
     self,
-    x_train: pd.DataFrame,
-    y_train: pd.DataFrame,
+    x_train: np.ndarray,
+    y_train: np.ndarray,
     x_test: pd.DataFrame,
   ) -> pd.Series:
-    model = RandomForestClassifier(
+    model = AdaBoostClassifier(
       random_state=3,
-      max_depth=2
+      n_estimators=2,
     )
     model.fit(x_train, y_train)
     return model.predict(x_test)
