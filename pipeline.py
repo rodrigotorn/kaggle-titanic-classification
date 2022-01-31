@@ -20,45 +20,42 @@
 # %%
 import pandas as pd
 import numpy as np
+
 from sklearn.preprocessing import StandardScaler
 from src.preprocess import Preprocess
-from src.models.mlp import MLP
-from src.models.knn import KNN
+
 from src.models.rf import RF
+from src.models.knn import KNN
+from src.models.svc import SVC
+from src.models.adaboost import Adaboost
+from src.models.mlp import MLP
+
+import warnings
+warnings.filterwarnings('ignore')
 
 # %% tags=[]
 raw_train_df: pd.DataFrame = pd.read_csv('data/train.csv', index_col=0)
 raw_test_df: pd.DataFrame = pd.read_csv('data/test.csv', index_col=0)
 y_train: pd.Series = raw_train_df['Survived']
 
-preprocesser = Preprocess(raw_train_df, StandardScaler())
-x_train: np.ndarray = preprocesser.transform(raw_train_df)
-x_test: np.ndarray = preprocesser.transform(raw_test_df)
-
-mlp_params = [{'hidden_layer_sizes': [
-    (15,), (20,), (30,), (40,), (50,),
-  ]}]  
-knn_params = [{'n_neighbors': [5, 10, 15, 20, 25]}]
-rf_params = [{'n_estimators': [50, 100, 200, 500, 1000]}]
-    
-mlp = MLP(search_params=True, params=mlp_params)
-knn = KNN(search_params=True, params=knn_params)
-rf = RF(search_params=True, params=rf_params)
-
-mlp_score = mlp.train(x_train, y_train)
-knn_score = knn.train(x_train, y_train)
-rf_score = rf.train(x_train, y_train)
-
-print(mlp_score, knn_score, rf_score)
+x_train, x_test = Preprocess(scaler=StandardScaler()) \
+  .apply(raw_train_df, raw_test_df)
 
 # %%
 predictions: pd.DataFrame = pd.DataFrame({
-    'mlp': mlp.predict(x_test),
-    'knn': knn.predict(x_test),
-    'rf': rf.predict(x_test),
+    'rf': RF().predict(x_train, y_train, x_test),
+    'knn': KNN().predict(x_train, y_train, x_test),
+    # 'svc': SVC().predict(x_train, y_train, x_test),
+    'adaboost': Adaboost().predict(x_train, y_train, x_test),
+    'mlp': MLP().predict(x_train, y_train, x_test),
 })
+
+# workaround for a SVC unknown error
+predictions['svc'] = pd.read_csv(
+    'grid_search/suport_vector_machine/svc_predictions.csv',
+)
 
 predictions['PassengerId'] = raw_test_df.index
 predictions['Survived'] = predictions.mode(axis=1)
-predictions.drop(['mlp', 'knn', 'rf'], axis=1, inplace=True)
+predictions = predictions[['PassengerId', 'Survived']]
 predictions.to_csv('data/output.csv', index=False)

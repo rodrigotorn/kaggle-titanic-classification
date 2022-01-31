@@ -13,8 +13,8 @@ class SVC(BaseModel):
   def predict(
     self,
     x_train: np.ndarray,
-    y_train: np.ndarray,
-    x_test: pd.DataFrame,
+    y_train: pd.DataFrame,
+    x_test: np.ndarray,
   ) -> pd.Series:
     model = SVC(
       random_state=3,
