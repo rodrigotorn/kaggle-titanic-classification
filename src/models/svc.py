@@ -3,6 +3,10 @@ import pandas as pd
 import numpy as np
 from sklearn.svm import SVC
 from src._model import BaseModel
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class SVC(BaseModel):
@@ -20,5 +24,6 @@ class SVC(BaseModel):
       random_state=3,
       kernel='rbf',
     )
+    logger.info('Predicting with SVC model')
     model.fit(x_train, y_train)
     return model.predict(x_test)
