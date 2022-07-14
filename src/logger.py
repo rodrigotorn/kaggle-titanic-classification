@@ -7,7 +7,7 @@ def get_logger(name, level):
 
   ch = logging.StreamHandler()
   ch.setLevel(level=level)
-  fh = logging.FileHandler('src.log')
+  fh = logging.FileHandler('/tmp/src.log')
   fh.setLevel(level=level)
 
   formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
